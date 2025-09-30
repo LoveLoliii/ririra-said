@@ -22,6 +22,25 @@ export class PluginManagerService {
     }
   }
 
+
+async loadAllPlugins() {
+  const pluginDirs = fs.readdirSync(this.pluginsDir, { withFileTypes: true })
+    .filter(d => d.isDirectory())
+    .map(d => d.name);
+
+  for (const dir of pluginDirs) {
+    try {
+      const meta = this.readPluginMeta(path.join(this.pluginsDir, dir));
+      if (meta.enabled) {
+        await this.loadPlugin(dir, meta);
+      }
+    } catch (err) {
+      console.error(`❌ 加载插件 ${dir} 失败:`, err.message);
+    }
+  }
+}
+
+
   /** 安装插件：下载 + 解压 + npm install */
   async installPlugin(name: string, url: string) {
     console.log(`[PluginManager] 下载插件 ${name} from ${url}`);
