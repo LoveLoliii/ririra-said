@@ -18,3 +18,7 @@ ririra-said/
 │─ plugins/
 │  └─ hello.plugin.js    # 插件示例（支持动态加载）
 ```
+插件实例【[ririra-plugins-example](https://github.com/LoveLoliii/ririra-plugins-example#)】
+
+相关文档：
+- [nestjs](https://docs.nestjs.cn/introduction)
