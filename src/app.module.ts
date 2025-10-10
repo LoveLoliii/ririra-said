@@ -4,10 +4,15 @@ import { AppService } from './app.service';
 import { PluginController } from './plugin.controller';
 import { PluginManagerService } from './plugin-manager.service';
 import { EventBusService } from './event-bus.service';
+import { EventEmitterModule } from '@nestjs/event-emitter';
+import { WebhookController } from './webhook.controller';
+import { ReplyService } from './reply/reply.service';
 
 @Module({
-  imports: [],
-  controllers: [AppController,PluginController],
-  providers: [AppService,PluginManagerService,EventBusService],
+  imports: [
+    EventEmitterModule.forRoot(),
+  ],
+  controllers: [AppController,PluginController,WebhookController],
+  providers: [AppService,PluginManagerService,EventBusService,ReplyService],
 })
 export class AppModule {}

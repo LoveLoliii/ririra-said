@@ -13,7 +13,7 @@ export class PluginController {
 
   @Delete('uninstall')
   async uninstall(@Body('name') name: string) {
-    await this.pluginManager.uninstallPlugin(name);
+    await this.pluginManager.unloadPlugin(name);
     return { message: `插件 ${name} 卸载成功` };
   }
 }

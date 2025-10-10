@@ -16,6 +16,10 @@ export class EventBusService {
 
   constructor(private readonly eventEmitter: EventEmitter2) {}
 
+  /** 插件注册事件监听 */
+  on(event: string, listener: (...args: any[]) => void) {
+    this.eventEmitter.on(event, listener);
+  }
   /**
    * 广播事件给已注册插件
    */

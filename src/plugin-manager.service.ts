@@ -87,9 +87,22 @@ export class PluginManagerService {
       if (k.startsWith(path.join(this.pluginsDir, name))) delete require.cache[k];
     });
 
-    // 共享依赖优先
-    const pluginRequire = createRequire(entryPath);
-    const pluginModule = pluginRequire(entryPath);
+    let pluginModule: any;
+
+    // 判断文件内容是否为 ESM 模块（包含 export 或 import）
+    const code = fs.readFileSync(entryPath, 'utf8');
+    const isESM = /export\s+default|import\s+.+from/.test(code);
+
+    if (isESM) {
+      // 使用动态 import 加载 ESM 插件
+      const fileUrl = `file://${entryPath}`;
+      pluginModule = await import(fileUrl);
+    } else {
+      // CommonJS 插件使用 require
+      const pluginRequire = createRequire(entryPath);
+      pluginModule = pluginRequire(entryPath);
+    }
+
     const plugin = pluginModule.default || pluginModule;
 
     this.plugins.set(name, plugin);
