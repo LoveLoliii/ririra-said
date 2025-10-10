@@ -16,6 +16,6 @@ async function bootstrap() {
     console.error('❌ 加载插件失败:', err);
   }
 
-  await app.listen(process.env.PORT ?? 3000);
+  await app.listen(process.env.PORT ?? 3001);
 }
 bootstrap();
