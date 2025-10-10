@@ -18,7 +18,15 @@ ririra-said/
 │─ plugins/
 │  └─ hello.plugin.js    # 插件示例（支持动态加载）
 ```
-插件实例【[ririra-plugins-example](https://github.com/LoveLoliii/ririra-plugins-example#)】
+插件实例【[ririra-plugins-name](https://github.com/LoveLoliii/ririra-plugins-name#)】
+
+安装测试
+```
+curl -X POST http://localhost:3000/plugin/install \
+  -H "Content-Type: application/json" \
+  -d '{"name":"ririra-plugins-name","url": "https://github.com/LoveLoliii/ririra-plugins-name.git"}'
+
+```
 
 相关文档：
 - [nestjs](https://docs.nestjs.cn/introduction)
