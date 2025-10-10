@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { EventBusService } from './event-bus.service.js';
 import fs from 'fs';
 import path from 'path';
-import tar from 'tar';
+import { x as tarX } from 'tar'; // 使用命名导入
 import AdmZip from 'adm-zip';
 import fetch from 'node-fetch';
 import { exec } from 'child_process';
@@ -54,7 +54,7 @@ export class PluginManagerService {
     } else if (url.endsWith('.tgz')) {
       const tarPath = path.join(this.pluginsDir, `${name}.tgz`);
       fs.writeFileSync(tarPath, buf);
-      await tar.x({ file: tarPath, cwd: pluginPath });
+      await tarX({ file: tarPath, cwd: pluginPath }); // 使用命名导入的 tarX 函数
       fs.unlinkSync(tarPath);
     } else if (url.endsWith('.git')) {
       await execAsync(`git clone ${url} ${pluginPath}`, { cwd: this.pluginsDir });
