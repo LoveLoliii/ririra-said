@@ -1,10 +1,10 @@
 import { Controller, Post, Body, HttpCode, Res, Get } from '@nestjs/common';
-import { EventBusService } from './event-bus.service';
-import { AppService } from './app.service';
+import { EventBusService } from './event-bus.service.js';
+import { AppService } from './app.service.js';
 import type { Response } from 'express';
-import { lalafellConfig } from './config/all-config';
+import { lalafellConfig } from './config/all-config.js';
 import nacl from 'tweetnacl';
-import { ReplyService } from './reply/reply.service';
+import { ReplyService } from './reply/reply.service.js';
 
 @Controller()
 export class WebhookController {

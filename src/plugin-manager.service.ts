@@ -1,13 +1,12 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { EventBusService } from './event-bus.service';
-import * as fs from 'fs';
-import * as path from 'path';
-import * as tar from 'tar';
+import { EventBusService } from './event-bus.service.js';
+import fs from 'fs';
+import path from 'path';
+import tar from 'tar';
 import AdmZip from 'adm-zip';
 import fetch from 'node-fetch';
-import { exec, spawn } from 'child_process';
+import { exec } from 'child_process';
 import { promisify } from 'util';
-import { createRequire } from 'module';
 
 const execAsync = promisify(exec);
 
@@ -82,27 +81,9 @@ export class PluginManagerService {
 
     this.unloadPlugin(name);
 
-    // 清缓存
-    Object.keys(require.cache).forEach((k) => {
-      if (k.startsWith(path.join(this.pluginsDir, name))) delete require.cache[k];
-    });
-
-    let pluginModule: any;
-
-    // 判断文件内容是否为 ESM 模块（包含 export 或 import）
-    const code = fs.readFileSync(entryPath, 'utf8');
-    const isESM = /export\s+default|import\s+.+from/.test(code);
-
-    if (isESM) {
-      // 使用动态 import 加载 ESM 插件
-      const fileUrl = `file://${entryPath}`;
-      pluginModule = await import(fileUrl);
-    } else {
-      // CommonJS 插件使用 require
-      const pluginRequire = createRequire(entryPath);
-      pluginModule = pluginRequire(entryPath);
-    }
-
+    // 动态 import 加载插件
+    const fileUrl = `file://${entryPath}`;
+    const pluginModule = await import(fileUrl);
     const plugin = pluginModule.default || pluginModule;
 
     this.plugins.set(name, plugin);

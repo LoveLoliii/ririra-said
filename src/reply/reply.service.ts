@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { AppDateSource } from 'src/config/db.config';
-import { BotConfig } from 'src/entity/bot.config';
+import { AppDateSource } from '../config/db.config.js';
+import { BotConfig } from '../entity/bot.config.js';
 const processed_msg = new Set();;
 
 @Injectable()

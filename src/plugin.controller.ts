@@ -1,5 +1,5 @@
 import { Controller, Post, Delete, Body } from '@nestjs/common';
-import { PluginManagerService } from './plugin-manager.service';
+import { PluginManagerService } from './plugin-manager.service.js';
 
 @Controller('plugin')
 export class PluginController {
