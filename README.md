@@ -1,8 +1,9 @@
 #### 莉莉菈将对你的【罪行】进行审判
 开始
 ```
-$ npm i -g @nestjs/cli
-$ nest new ririra-said
+$ git clone https://github.com/LoveLoliii/ririra-said
+$ npm install
+$ npm run start
 ```
 结构
 ```
