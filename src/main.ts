@@ -10,7 +10,7 @@ async function bootstrap() {
 
   // 启动时加载所有已下载的插件
   try {
-    await pluginManager.loadAllPlugins();
+    await pluginManager.init();
     console.log('✅ 所有插件已加载完成');
   } catch (err) {
     console.error('❌ 加载插件失败:', err);

@@ -4,12 +4,14 @@ import { AppService } from './app.service';
 import type { Response } from 'express';
 import { lalafellConfig } from './config/all-config';
 import nacl from 'tweetnacl';
+import { ReplyService } from './reply/reply.service';
 
 @Controller()
 export class WebhookController {
   constructor(
     private readonly eventBus: EventBusService,
-    private readonly appService:AppService
+    private readonly appService:AppService,
+    private readonly replyService:ReplyService
   ) {}
 
   @Get()
@@ -19,7 +21,7 @@ export class WebhookController {
 
   @Post('callback')
   @HttpCode(200)
-  handleWebhook(@Body() body: Payload,@Res() res:Response) {
+  async handleWebhook(@Body() body: Payload,@Res() res:Response) {
     const BOT_SECRET = lalafellConfig.secret;
     const { op } = body;
     console.log('接收到的 Payload:', JSON.stringify(body, null, 2));
@@ -53,7 +55,25 @@ export class WebhookController {
         signature: signatureHex,
       });
     }else{
-      this.eventBus.emit('message', {body,res});
+      // 事件分发
+      const eventType = body.t;
+      const msg = body?.d?.content ?? '';
+
+      // 构造上下文
+      const context = {
+        event: eventType,
+        payload: body,
+        reply: async (reply: string) => {
+          // 将消息回发给消息来源（例如 QQ、Telegram 等）
+          const result = await this.replyService.reply(body,reply);
+          //this.logger.debug('reply result', result);
+        },
+        shared: new Map<string, any>(),
+      };
+      // 分发事件给插件
+      await this.eventBus.emit(eventType, context);
+
+      res.json({ ok: true });
     }
   }
 }
