@@ -1,9 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 
-interface BotEventContext {
+export interface BotEventContext<TPayload = any> {
   event: string;
-  payload: any;
+  payload: TPayload;
   reply: (msg: string) => Promise<void>;
   shared: Map<string, any>;
 }
