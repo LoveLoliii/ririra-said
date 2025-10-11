@@ -20,6 +20,7 @@ export class ReplyService {
         } = body.d;
         if (processed_msg.has(msg_id)) {
             this.logger.log(`❗️消息 ${msg_id} 已存在，不重复发送`);
+            return ''
         }
         processed_msg.add(msg_id);
         reply_to_group_at({group_openid,msg_id,msg_type:0,media:null,content:reply,access_token,app_id:bot_config.app_id})
