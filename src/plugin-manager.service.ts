@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { EventBusService } from './event-bus.service.js';
+import { AppDataSource } from './config/db.config.js';
 import fs from 'fs';
 import path from 'path';
 import { x as tarX } from 'tar'; // 使用命名导入
@@ -7,6 +8,7 @@ import AdmZip from 'adm-zip';
 import fetch from 'node-fetch';
 import { exec } from 'child_process';
 import { promisify } from 'util';
+import { ensureTableExists } from './utils/db.utils.js';
 
 const execAsync = promisify(exec);
 
@@ -89,8 +91,21 @@ export class PluginManagerService {
     this.plugins.set(name, plugin);
     this.eventBus.registerPermission(name, Object.keys(meta.events ?? {}));
 
+    if (!AppDataSource.isInitialized) {
+      await AppDataSource.initialize();
+    }
+    
+    const db = {
+      query: async (sql, params) => AppDataSource.query(sql, params),
+      getRepository: (entity) => AppDataSource.getRepository(entity),
+    };
     if (typeof plugin.init === 'function') {
-      plugin.init(this.eventBus);
+      if(plugin.entities){
+        for (const entity of plugin.entities) {
+        await ensureTableExists(AppDataSource, entity);
+        }
+      }
+      plugin.init(this.eventBus, db);
     }
 
     this.logger.log(`插件 ${name}@${meta.version} 已加载`);

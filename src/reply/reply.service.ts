@@ -1,11 +1,11 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { AppDateSource } from '../config/db.config.js';
+import { AppDataSource } from '../config/db.config.js';
 import { BotConfig } from '../entity/bot.config.js';
 const processed_msg = new Set();;
 
 @Injectable()
 export class ReplyService {
-  private bot_config_resitory = AppDateSource.getRepository(BotConfig)
+  private bot_config_resitory = AppDataSource.getRepository(BotConfig)
   private readonly logger = new Logger('ReplyService');
 
   async reply(body:Payload,reply:string): Promise<string> {

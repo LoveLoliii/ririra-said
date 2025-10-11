@@ -5,12 +5,12 @@ import type { Response } from 'express';
 import { lalafellConfig } from './config/all-config.js';
 import nacl from 'tweetnacl';
 import { ReplyService } from './reply/reply.service.js';
-import { AppDateSource } from './config/db.config.js';
+import { AppDataSource } from './config/db.config.js';
 import { BotConfig } from './entity/bot.config.js';
 
 @Controller()
 export class WebhookController {
-  private bot_config_resitory = AppDateSource.getRepository(BotConfig)
+  private bot_config_resitory = AppDataSource.getRepository(BotConfig)
   private logger = new Logger('WebhookController')
   
   constructor(
