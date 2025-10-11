@@ -15,8 +15,8 @@ describe('AppController', () => {
   });
 
   describe('root', () => {
-    it('should return "Hello World!"', () => {
-      expect(appController.getHello()).toBe('Hello World!');
+    it('ririra said:', () => {
+      expect(appController.ririraSaid()).toBe('莉莉菈将对你的【罪行】进行审判。\nLilirra shall pass judgment upon your sins.');
     });
   });
 });

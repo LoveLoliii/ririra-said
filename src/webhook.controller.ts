@@ -21,7 +21,7 @@ export class WebhookController {
 
   @Get()
   getHello():string{  
-    return this.appService.getHello();
+    return this.appService.ririraSaid();
   }
 
   @Post('callback')
