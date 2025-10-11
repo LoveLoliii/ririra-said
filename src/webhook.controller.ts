@@ -1,13 +1,18 @@
-import { Controller, Post, Body, HttpCode, Res, Get } from '@nestjs/common';
+import { Controller, Post, Body, HttpCode, Res, Get, Logger } from '@nestjs/common';
 import { EventBusService } from './event-bus.service.js';
 import { AppService } from './app.service.js';
 import type { Response } from 'express';
 import { lalafellConfig } from './config/all-config.js';
 import nacl from 'tweetnacl';
 import { ReplyService } from './reply/reply.service.js';
+import { AppDateSource } from './config/db.config.js';
+import { BotConfig } from './entity/bot.config.js';
 
 @Controller()
 export class WebhookController {
+  private bot_config_resitory = AppDateSource.getRepository(BotConfig)
+  private logger = new Logger('WebhookController')
+  
   constructor(
     private readonly eventBus: EventBusService,
     private readonly appService:AppService,
@@ -22,7 +27,12 @@ export class WebhookController {
   @Post('callback')
   @HttpCode(200)
   async handleWebhook(@Body() body: Payload,@Res() res:Response) {
-    const BOT_SECRET = lalafellConfig.secret;
+    const bot_config = await this.bot_config_resitory.findOne({ where: {} });
+    if(!bot_config){
+      this.logger.error('no bot config')
+      return res.status(500).json({ error: 'no bot config' });
+    }
+    const BOT_SECRET = bot_config.app_secrect;
     const { op } = body;
     console.log('接收到的 Payload:', JSON.stringify(body, null, 2));
     const plainToken = body?.d?.plain_token;
