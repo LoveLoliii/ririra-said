@@ -24,3 +24,27 @@ function addEntitiesAndReload(newEntities: any[]) {
 
   return newAS.initialize(); // 重新初始化
 }
+
+export async function registerPluginEntities(plugin) {
+  if (!plugin.entities?.length) return;
+  let entities = AppDataSource.options.entities as EntityTarget<any>[]
+  // 追加到 DataSource 配置
+  const newEntities = plugin.entities.filter(
+    e => !entities.includes(e)
+  );
+
+  if (newEntities.length > 0) {
+    AppDataSource.setOptions({
+      ...AppDataSource.options,
+      entities: [...entities, ...newEntities],
+    });
+
+    // ⚠️ TypeORM 0.3.x 必须重新初始化 DataSource 才能识别新实体
+    if (AppDataSource.isInitialized) {
+      await AppDataSource.destroy();
+    }
+    await AppDataSource.initialize();
+
+    console.log(`[typeorm] 已注册实体: ${newEntities.map(e => e.name).join(', ')}`);
+  }
+}

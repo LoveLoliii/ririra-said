@@ -8,7 +8,7 @@ import AdmZip from 'adm-zip';
 import fetch from 'node-fetch';
 import { exec } from 'child_process';
 import { promisify } from 'util';
-import { ensureTableExists } from './utils/db.utils.js';
+import { registerPluginEntities } from './utils/db.utils.js';
 
 const execAsync = promisify(exec);
 
@@ -100,11 +100,7 @@ export class PluginManagerService {
       getRepository: (entity) => AppDataSource.getRepository(entity),
     };
     if (typeof plugin.init === 'function') {
-      if(plugin.entities){
-        for (const entity of plugin.entities) {
-        await ensureTableExists(AppDataSource, entity);
-        }
-      }
+      await registerPluginEntities(plugin);
       plugin.init(this.eventBus, db);
     }
 
