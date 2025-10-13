@@ -78,6 +78,8 @@ export class PluginManagerService {
 
   /** 加载插件（带事件总线注入） */
   async loadPlugin(name: string, meta: any) {
+    const pluginPath = path.join(this.pluginsDir, name);
+    await this.runNpmInstall(pluginPath);
     const entryPath = path.join(this.pluginsDir, name, meta.main);
     if (!fs.existsSync(entryPath)) throw new Error(`插件入口不存在: ${entryPath}`);
 
