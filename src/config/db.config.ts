@@ -1,8 +1,8 @@
-import { BotConfig } from "src/entity/bot.config";
+import { BotConfig } from "../entity/bot.config.js";
 import { DataSource } from "typeorm";
 
 //可以优化到初始给入
-export const AppDateSource = new DataSource({
+export const AppDataSource = new DataSource({
   type:'mysql',
   host:'__',
   port:3306,
@@ -14,7 +14,7 @@ export const AppDateSource = new DataSource({
   entities:  [BotConfig], // 实体类路径
 })
 
-AppDateSource.initialize()
+AppDataSource.initialize()
   .then(() => {
     console.log('AppDataSource initialized');
   })
